@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Preço do Box</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-top: 20px;
+            font-size: 2.5em;
+        }
+
+        .info {
+            text-align: center;
+            color: #555;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #resultado {
+            text-align: center;
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculadora de Preço do Box</h1>
+    <p class="info">A altura padrão considerada para o cálculo é 1,90m.</p>
+    <form id="box-form">
+        <label for="vidro">Tipo de Vidro:</label>
+        <select id="vidro" name="vidro">
+            <option value="incolor">Incolor</option>
+            <option value="verde">Verde</option>
+            <option value="fume">Fume</option>
+        </select>
+
+        <label for="cor">Cor do Kit:</label>
+        <select id="cor" name="cor">
+            <option value="aluminio">Alumínio Brilhante</option>
+            <option value="branco">Branco</option>
+            <option value="preto">Preto</option>
+            <option value="fosco">Fosco</option>
+        </select>
+
+        <label for="tipo">Tipo de Box:</label>
+        <select id="tipo" name="tipo">
+            <option value="reto">Reto</option>
+            <option value="canto">De Canto</option>
+        </select>
+
+        <label for="largura">Largura (em cm):</label>
+        <input type="number" id="largura" name="largura" required>
+
+        <button type="button" onclick="calcularPreco()">Calcular Preço</button>
+    </form>
+
+    <div id="resultado"></div>
+
+    <script>
+        function calcularPreco() {
+            const vidro = document.getElementById('vidro').value;
+            const cor = document.getElementById('cor').value;
+            const tipo = document.getElementById('tipo').value;
+            const largura = parseFloat(document.getElementById('largura').value);
+
+            if (isNaN(largura) || largura <= 0) {
+                document.getElementById('resultado').innerText = 'Por favor, insira uma largura válida.';
+                return;
+            }
+
+            let precoVidro;
+
+            // Preço base do vidro
+            switch (vidro) {
+                case 'incolor':
+                    precoVidro = 350;
+                    break;
+                case 'verde':
+                case 'fume':
+                    precoVidro = 470;
+                    break;
+                default:
+                    precoVidro = 0;
+                    break;
+            }
+
+            // Altura padrão usada no cálculo (em cm)
+            const altura = 200; // 2 metros em cm
+
+            // Ajuste de largura baseado no tipo de box
+            const larguraAjustada = largura + (tipo === 'reto' ? 5 : 10);
+
+            // Cálculo do preço base do vidro
+            const precoBase = precoVidro * 2 * larguraAjustada;
+
+            // Cálculo final dividido por 100
+            let precoFinal = precoBase / 100;
+
+            // Ajuste de preço para cor do kit
+            if (cor === 'aluminio') {
+                precoFinal += tipo === 'reto' ? 8000 / 100 : 12000 / 100;
+            }
+
+            // Exibir o preço com duas casas decimais
+            document.getElementById('resultado').innerText = `Preço Total: R$${precoFinal.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
